@@ -89,7 +89,7 @@ public abstract class Client {
 					System.err.println((char) 27 + "[31;1mCommand exception: " + (char) 27
 					+ "[0mImproper use of Commit command.");
 				} else {
-					m_resourceManager.commit((Integer)arguments.elementAt(1));
+					m_resourceManager.commit(Integer.parseInt(arguments.elementAt(1)));
 					System.out.println("The transaction is commited!!!");
 				}
 				break;
@@ -99,7 +99,7 @@ public abstract class Client {
 					System.err.println((char) 27 + "[31;1mCommand exception: " + (char) 27
 					+ "[0mImproper use of Abort command.");
 				} else {
-					m_resourceManager.abort((Integer)arguments.elementAt(1));
+					m_resourceManager.abort(Integer.parseInt(arguments.elementAt(1)));
 					System.out.println("The transaction is aborted!!!");
 				}
 				break;
