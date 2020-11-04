@@ -2,7 +2,7 @@ package Server.LockManager;
 
 public class TransactionObject
 {
-	protected int m_xid = 0;
+	public int m_xid = 0;
 
 	TransactionObject()
 	{

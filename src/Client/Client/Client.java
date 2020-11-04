@@ -75,6 +75,35 @@ public abstract class Client {
 				}
 				break;
 			}
+			case Start: {
+				if(arguments.size() == 1){
+					System.out.println("Starting a new transaction with xid:" + m_resourceManager.start());
+				}else{
+					System.err.println((char) 27 + "[31;1mCommand exception: " + (char) 27
+							+ "[0mImproper use of Start command.");
+				}
+				break;
+			}
+			case Commit: {
+				if(arguments.size() != 2) {
+					System.err.println((char) 27 + "[31;1mCommand exception: " + (char) 27
+					+ "[0mImproper use of Commit command.");
+				} else {
+					m_resourceManager.commit((Integer)arguments.elementAt(1));
+					System.out.println("The transaction is commited!!!");
+				}
+				break;
+			}
+			case Abort: {
+				if(arguments.size() != 2) {
+					System.err.println((char) 27 + "[31;1mCommand exception: " + (char) 27
+					+ "[0mImproper use of Abort command.");
+				} else {
+					m_resourceManager.abort((Integer)arguments.elementAt(1));
+					System.out.println("The transaction is aborted!!!");
+				}
+				break;
+			}
 			case AddFlight: {
 				checkArgumentsCount(5, arguments.size());
 

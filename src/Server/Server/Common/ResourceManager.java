@@ -14,10 +14,10 @@ import java.io.*;
 
 public class ResourceManager implements IResourceManager
 {
-	protected String m_name = "";
-	protected RMHashMap m_data = new RMHashMap();
-	protected LockManager lockManager = new LockManager();
-	// TODO (irmak) add undo steps hash map and then abort them in the abort method
+	public String m_name = "";
+	public RMHashMap m_data = new RMHashMap();
+	public HashMap<Integer, RMHashMap> history = new HashMap<>();
+	public LockManager lockManager = new LockManager();
 	
 	public ResourceManager(String p_name)
 	{
@@ -26,55 +26,85 @@ public class ResourceManager implements IResourceManager
 
 	// Commit
 	@Override
-	protected void commit(int xid) {
-		this.lockManager.unlockAll(xid);
+	public void commit(int xid) {
+		this.lockManager.UnlockAll(xid);
 	}
 
 	// Abort
 	@Override
-	protected void abort(int xid) {
-		this.lockManager.unlockAll(xid);
+	public void abort(int xid) {
+		this.m_data = history.get(xid);
+		history.remove(xid);
+		this.lockManager.UnlockAll(xid);
+	}
+
+	// backupRM
+	public void backupRM(int xid){
+		if(!history.containsKey(xid)) {
+			history.put(xid, (RMHashMap)m_data.clone());
+		}
+	}
+
+	@Override
+	public int start() {
+		return 0;
 	}
 
 	// Reads a data item
-	protected RMItem readData(int xid, String key)
+	public RMItem readData(int xid, String key)
 	{
-		if(lockManager.lock(xid, key, TransactionLockObject.LockType.LOCK_READ)){
-			System.out.println("The object key:" + key + " is now read locked for xid:" + xid);
-			synchronized(m_data) {
-				RMItem item = m_data.get(key);
-				if (item != null) {
-					return (RMItem)item.clone();
+		try {
+			if(lockManager.Lock(xid, key, TransactionLockObject.LockType.LOCK_READ)){
+				System.out.println("The object key:" + key + " is now read locked for xid:" + xid);
+				synchronized(m_data) {
+					RMItem item = m_data.get(key);
+					if (item != null) {
+						return (RMItem)item.clone();
+					}
+					return null;
 				}
+			}else {
 				return null;
 			}
+		}catch(DeadlockException e) {
+			System.exit(1);
 		}
+		return null;
 	}
 
 	// Writes a data item
-	protected void writeData(int xid, String key, RMItem value)
+	public void writeData(int xid, String key, RMItem value)
 	{
-		if(lockManager.lock(xid, key, TransactionLockObject.LockType.LOCK_WRITE)){
-			System.out.println("The object key:" + key + " is now write locked for xid:" + xid);
-				synchronized(m_data) {
-				m_data.put(key, value);
+		try {
+			if(lockManager.Lock(xid, key, TransactionLockObject.LockType.LOCK_WRITE)){
+				System.out.println("The object key:" + key + " is now write locked for xid:" + xid);
+					synchronized(m_data) {
+					m_data.put(key, value);
+				}
 			}
+		}catch(DeadlockException e) {
+			System.exit(1);
 		}
+	
 	}
 
 	// Remove the item out of storage
-	protected void removeData(int xid, String key)
+	public void removeData(int xid, String key)
 	{
-		if(lockManager.lock(xid, key, TransactionLockObject.LockType.LOCK_WRITE)){
+		try {
+			if(lockManager.Lock(xid, key, TransactionLockObject.LockType.LOCK_WRITE)){
 				System.out.println("The object key:" + key + " is now write locked for xid:" + xid);
 				synchronized(m_data) {
 				m_data.remove(key);
 			}
 		}
+		}catch(DeadlockException e) {
+			System.exit(1);
+		}
 	}
 
 	// Deletes the encar item
-	protected boolean deleteItem(int xid, String key)
+	public boolean deleteItem(int xid, String key)
 	{
 		Trace.info("RM::deleteItem(" + xid + ", " + key + ") called");
 		ReservableItem curObj = (ReservableItem)readData(xid, key);
@@ -101,7 +131,7 @@ public class ResourceManager implements IResourceManager
 	}
 
 	// Query the number of available seats/rooms/cars
-	protected int queryNum(int xid, String key)
+	public int queryNum(int xid, String key)
 	{
 		Trace.info("RM::queryNum(" + xid + ", " + key + ") called");
 		ReservableItem curObj = (ReservableItem)readData(xid, key);
@@ -115,7 +145,7 @@ public class ResourceManager implements IResourceManager
 	}    
 
 	// Query the price of an item
-	protected int queryPrice(int xid, String key)
+	public int queryPrice(int xid, String key)
 	{
 		Trace.info("RM::queryPrice(" + xid + ", " + key + ") called");
 		ReservableItem curObj = (ReservableItem)readData(xid, key);
@@ -129,7 +159,7 @@ public class ResourceManager implements IResourceManager
 	}
 
 	// Reserve an item
-	protected boolean reserveItem(int xid, int customerID, String key, String location)
+	public boolean reserveItem(int xid, int customerID, String key, String location)
 	{
 		Trace.info("RM::reserveItem(" + xid + ", customer=" + customerID + ", " + key + ", " + location + ") called" );        
 		// Read customer object if it exists (and read lock it)

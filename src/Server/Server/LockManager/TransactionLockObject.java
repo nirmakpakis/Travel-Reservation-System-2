@@ -8,11 +8,11 @@ public class TransactionLockObject extends TransactionObject
 		LOCK_UNKNOWN
 	};
 
-	protected String m_data = null;
-	protected LockType m_lockType = LockType.LOCK_UNKNOWN;
+	public String m_data = null;
+	public LockType m_lockType = LockType.LOCK_UNKNOWN;
 
 	// The data members inherited are 
-	// TransactionObject::protected int m_xid = 0;
+	// TransactionObject::public int m_xid = 0;
 
 	TransactionLockObject()
 	{

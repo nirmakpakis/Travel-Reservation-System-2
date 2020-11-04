@@ -29,9 +29,14 @@ public interface IResourceManager extends Remote
     public void commit(int xid) throws RemoteException;
 
     /**
-     * 
+     * abort
      */
     public void abort(int xid) throws RemoteException;
+
+     /**
+     * start
+     */
+    public int start() throws RemoteException;
     
     /**
      * Add seats to a flight.

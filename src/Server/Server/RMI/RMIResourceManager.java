@@ -74,7 +74,7 @@ public class RMIResourceManager extends ResourceManager {
 	}
 
 	@Override
-	protected boolean reserveItem(int xid, int customerID, String key, String location) {
+	public boolean reserveItem(int xid, int customerID, String key, String location) {
 
 		// Check if the item is available
 		ReservableItem item = (ReservableItem) readData(xid, key);

@@ -2,12 +2,12 @@ package Server.LockManager;
 
 public class WaitLockObject extends DataLockObject
 {
-	protected Thread m_thread = null;
+	public Thread m_thread = null;
 
 	// The data members inherited are 
-	// TransactionObject:: protected int m_xid;
-	// TransactionLockObject:: protected String m_data;
-	// TransactionLockObject:: protected int m_lockType;
+	// TransactionObject:: public int m_xid;
+	// TransactionLockObject:: public String m_data;
+	// TransactionLockObject:: public int m_lockType;
 
 	WaitLockObject()
 	{

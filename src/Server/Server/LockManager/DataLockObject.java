@@ -3,9 +3,9 @@ package Server.LockManager;
 public class DataLockObject extends TransactionLockObject
 {
 	// The data members inherited are
-	// TransactionObject:: protected int xid;
-	// TransactionLockObject:: protected String data;
-	// TransactionLockObject:: protected int lockType;
+	// TransactionObject:: public int xid;
+	// TransactionLockObject:: public String data;
+	// TransactionLockObject:: public int lockType;
 
 	DataLockObject()
 	{

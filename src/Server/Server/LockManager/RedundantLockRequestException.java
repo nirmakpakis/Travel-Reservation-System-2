@@ -4,7 +4,7 @@ package Server.LockManager;
 
 public class RedundantLockRequestException extends Exception
 {
-	protected int m_xid = 0;
+	public int m_xid = 0;
 
 	public RedundantLockRequestException(int xid, String msg)
 	{
