@@ -26,15 +26,17 @@ public class ResourceManager implements IResourceManager
 
 	// Commit
 	@Override
-	public void commit(int xid) {
+	public void commit(int xid) throws RemoteException {
 		this.lockManager.UnlockAll(xid);
 	}
 
 	// Abort
 	@Override
-	public void abort(int xid) {
-		this.m_data = history.get(xid);
-		history.remove(xid);
+	public void abort(int xid) throws RemoteException {
+		if(history.containsKey(xid)) {
+			this.m_data = history.get(xid);
+			history.remove(xid);
+		}
 		this.lockManager.UnlockAll(xid);
 	}
 

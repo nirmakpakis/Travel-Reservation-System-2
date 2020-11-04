@@ -1,0 +1,3 @@
+grant codebase "file:/Users/irmakpakis/Desktop/Travel-Reservation-System-2/src/Client/" {
+permission java.security.AllPermission;
+};

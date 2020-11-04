@@ -1,42 +1,44 @@
 package Server.RMI;
 
 import Server.Common.*;
+import Server.Interface.*;
+import java.rmi.RemoteException;
 
 import java.util.*;
 
 public class TransactionManager {
 	static int xid_generator = 100;
+	public HashMap<Integer, RMHashMap> history = new HashMap<>();
 
 	// transcaction directory
-	HashMap<Integer, Set<ResourceManager>> activeTransactions = new HashMap<>();
+	HashMap<Integer, Set<IResourceManager>> activeTransactions = new HashMap<>();
 
 	public TransactionManager(){
-
 	}
 
 	public int start() {
 		int xid = xid_generator;
 		xid_generator++;
 
-		HashSet<ResourceManager> resources = new HashSet<>();
+		HashSet<IResourceManager> resources = new HashSet<>();
 		activeTransactions.put(xid, resources);
 		return xid;
 	}
 
-	public void addResource(int xid, ResourceManager resource) {
-		resource.backupRM(xid);
+	public void addResource(int xid, IResourceManager resource) {
+		//resource.backupRM(xid);
 		activeTransactions.get(xid).add(resource);
 	}
 
-	public void commit(int xid) {
-		for(ResourceManager resource: activeTransactions.get(xid)) {
+	public void commit(int xid) throws RemoteException {
+		for(IResourceManager resource: activeTransactions.get(xid)) {
 			resource.commit(xid);
 		}
 		activeTransactions.remove(xid);
 	}
 
-	public void abort(int xid) {
-		for(ResourceManager resource: activeTransactions.get(xid)) {
+	public void abort(int xid) throws RemoteException {
+		for(IResourceManager resource: activeTransactions.get(xid)) {
 			resource.abort(xid);
 		}
 		activeTransactions.remove(xid);
