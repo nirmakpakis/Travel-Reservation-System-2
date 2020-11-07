@@ -76,7 +76,7 @@ public class ResourceManager implements IResourceManager
 	}
 
 	// Writes a data item
-	public void writeData(int xid, String key, RMItem value)
+	public void writeData(int xid, String key, RMItem value) throws RemoteException
 	{
 		try {
 			if(lockManager.Lock(xid, key, TransactionLockObject.LockType.LOCK_WRITE)){
@@ -108,7 +108,7 @@ public class ResourceManager implements IResourceManager
 	}
 
 	// Deletes the encar item
-	public boolean deleteItem(int xid, String key)
+	public boolean deleteItem(int xid, String key) throws RemoteException
 	{
 		Trace.info("RM::deleteItem(" + xid + ", " + key + ") called");
 		ReservableItem curObj = (ReservableItem)readData(xid, key);
@@ -135,7 +135,7 @@ public class ResourceManager implements IResourceManager
 	}
 
 	// Query the number of available seats/rooms/cars
-	public int queryNum(int xid, String key)
+	public int queryNum(int xid, String key) throws RemoteException
 	{
 		Trace.info("RM::queryNum(" + xid + ", " + key + ") called");
 		ReservableItem curObj = (ReservableItem)readData(xid, key);
@@ -149,7 +149,7 @@ public class ResourceManager implements IResourceManager
 	}    
 
 	// Query the price of an item
-	public int queryPrice(int xid, String key)
+	public int queryPrice(int xid, String key) throws RemoteException
 	{
 		Trace.info("RM::queryPrice(" + xid + ", " + key + ") called");
 		ReservableItem curObj = (ReservableItem)readData(xid, key);
@@ -163,7 +163,7 @@ public class ResourceManager implements IResourceManager
 	}
 
 	// Reserve an item
-	public boolean reserveItem(int xid, int customerID, String key, String location)
+	public boolean reserveItem(int xid, int customerID, String key, String location) throws RemoteException
 	{
 		Trace.info("RM::reserveItem(" + xid + ", customer=" + customerID + ", " + key + ", " + location + ") called" );        
 		// Read customer object if it exists (and read lock it)
