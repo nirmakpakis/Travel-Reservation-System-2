@@ -53,7 +53,7 @@ public class ResourceManager implements IResourceManager
 	}
 
 	// Reads a data item
-	public RMItem readData(int xid, String key)
+	public RMItem readData(int xid, String key) throws RemoteException
 	{
 		try {
 			if(lockManager.Lock(xid, key, TransactionLockObject.LockType.LOCK_READ)){
@@ -69,7 +69,8 @@ public class ResourceManager implements IResourceManager
 				return null;
 			}
 		}catch(DeadlockException e) {
-			System.exit(1);
+			System.out.println("Deadlock happened! jeez aborting timeout");
+			this.abort(xid);
 		}
 		return null;
 	}
@@ -85,13 +86,13 @@ public class ResourceManager implements IResourceManager
 				}
 			}
 		}catch(DeadlockException e) {
-			System.exit(1);
+			System.out.println("Deadlock happened! jeez");
 		}
 	
 	}
 
 	// Remove the item out of storage
-	public void removeData(int xid, String key)
+	public void removeData(int xid, String key) throws RemoteException
 	{
 		try {
 			if(lockManager.Lock(xid, key, TransactionLockObject.LockType.LOCK_WRITE)){
@@ -101,7 +102,8 @@ public class ResourceManager implements IResourceManager
 			}
 		}
 		}catch(DeadlockException e) {
-			System.exit(1);
+			System.out.println("Deadlock happened! jeez aborting timeout");
+			this.abort(xid);
 		}
 	}
 
