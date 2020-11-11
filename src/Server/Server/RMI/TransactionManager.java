@@ -13,12 +13,13 @@ public class TransactionManager {
 	// transcaction directory
 	HashMap<Integer, Set<IResourceManager>> activeTransactions = new HashMap<>();
 
-	public TransactionManager(){
+	private static synchronized void incrementXid() {
+		xid_generator++;
 	}
 
 	public int start() {
 		int xid = xid_generator;
-		xid_generator++;
+		TransactionManager.incrementXid();
 
 		HashSet<IResourceManager> resources = new HashSet<>();
 		activeTransactions.put(xid, resources);
@@ -26,19 +27,19 @@ public class TransactionManager {
 	}
 
 	public void addResource(int xid, IResourceManager resource) {
-		//resource.backupRM(xid);
+		// resource.backupRM(xid);
 		activeTransactions.get(xid).add(resource);
 	}
 
 	public void commit(int xid) throws RemoteException {
-		for(IResourceManager resource: activeTransactions.get(xid)) {
+		for (IResourceManager resource : activeTransactions.get(xid)) {
 			resource.commit(xid);
 		}
 		activeTransactions.remove(xid);
 	}
 
 	public void abort(int xid) throws RemoteException {
-		for(IResourceManager resource: activeTransactions.get(xid)) {
+		for (IResourceManager resource : activeTransactions.get(xid)) {
 			resource.abort(xid);
 		}
 		activeTransactions.remove(xid);
