@@ -31,7 +31,7 @@ public class RMIMiddleware extends ResourceManager {
 		super(p_name);
 		Cleaner cleaner = new Cleaner(transactionManager);
 		Thread thread = new Thread(cleaner);
-		thread.run();
+		thread.start();
 	}
 
 	// call commit to all servers
