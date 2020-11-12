@@ -7,7 +7,7 @@ import java.util.*;
 
 public class TransactionManager {
 	private static int xid_generator = 100;
-	public static long CLIENT_TIMEOUT = 1;
+	public static long CLIENT_TIMEOUT = 30000;
 	
 	// transcaction directory
 	HashMap<Integer, Set<IResourceManager>> activeTransactions = new HashMap<>();
@@ -60,5 +60,9 @@ public class TransactionManager {
 		}
 		activeTransactions.remove(xid);
 		activeTransactionTime.remove(xid);
+	}
+
+	public void updateTime(int xid) {
+		this.activeTransactionTime.put(xid, System.currentTimeMillis());
 	}
 }

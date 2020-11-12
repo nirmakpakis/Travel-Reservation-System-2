@@ -26,8 +26,7 @@ public class RMIMiddleware extends ResourceManager {
 	// Transaction Manager
 	private static TransactionManager transactionManager = new TransactionManager();
 
-	public RMIMiddleware(String p_name)
-	{
+	public RMIMiddleware(String p_name) {
 		super(p_name);
 		Cleaner cleaner = new Cleaner(transactionManager);
 		Thread thread = new Thread(cleaner);
@@ -43,14 +42,14 @@ public class RMIMiddleware extends ResourceManager {
 	@Override
 	public void abort(int xid) throws RemoteException {
 		Set<IResourceManager> activeResources = transactionManager.activeTransactions.get(xid);
-		for(IResourceManager rm: activeResources){
+		for (IResourceManager rm : activeResources) {
 			rm.rewindTransactions(xid);
 		}
 		transactionManager.abort(xid);
 	}
 
 	// start
-	public int start(){
+	public int start() {
 		// create a new transaction
 		try {
 			int xid = transactionManager.start();
@@ -58,7 +57,7 @@ public class RMIMiddleware extends ResourceManager {
 			carManager.rememberState(xid);
 			roomManager.rememberState(xid);
 			return xid;
-		}catch(RemoteException e) {
+		} catch (RemoteException e) {
 			System.err.println(e.getMessage());
 			System.exit(100);
 			return -1;
@@ -68,8 +67,9 @@ public class RMIMiddleware extends ResourceManager {
 	// calls addFlight on the flightmanager
 	@Override
 	public boolean addFlight(int xid, int flightNum, int flightSeats, int flightPrice) throws RemoteException {
+		transactionManager.updateTime(xid);
 		Trace.info("RM::addFlight(" + xid + ", " + flightNum + ", " + flightSeats + ", $" + flightPrice + ") called");
-		transactionManager.addResource(xid,  flightManager);
+		transactionManager.addResource(xid, flightManager);
 		try {
 			return flightManager.addFlight(xid, flightNum, flightSeats, flightPrice);
 		} catch (Exception e) {
@@ -81,8 +81,9 @@ public class RMIMiddleware extends ResourceManager {
 	// TODO: add trace infos
 	@Override
 	public boolean addCars(int xid, String location, int count, int price) throws RemoteException {
+		transactionManager.updateTime(xid);
 		Trace.info("RM::addCars(" + xid + ", " + location + ", " + count + ", $" + price + ") called");
-		transactionManager.addResource(xid,  carManager);
+		transactionManager.addResource(xid, carManager);
 		try {
 			return carManager.addCars(xid, location, count, price);
 		} catch (Exception e) {
@@ -93,8 +94,9 @@ public class RMIMiddleware extends ResourceManager {
 
 	@Override
 	public boolean addRooms(int xid, String location, int count, int price) throws RemoteException {
+		transactionManager.updateTime(xid);
 		Trace.info("RM::addRooms(" + xid + ", " + location + ", " + count + ", $" + price + ") called");
-		transactionManager.addResource(xid,  roomManager);
+		transactionManager.addResource(xid, roomManager);
 		try {
 			return roomManager.addRooms(xid, location, count, price);
 		} catch (Exception e) {
@@ -105,7 +107,8 @@ public class RMIMiddleware extends ResourceManager {
 
 	@Override
 	public boolean deleteFlight(int xid, int flightNum) throws RemoteException {
-		transactionManager.addResource(xid,  flightManager);
+		transactionManager.updateTime(xid);
+		transactionManager.addResource(xid, flightManager);
 		try {
 			System.out.println("Middleware connected to Flights server to delete flight");
 
@@ -119,7 +122,8 @@ public class RMIMiddleware extends ResourceManager {
 
 	@Override
 	public boolean deleteCars(int xid, String location) throws RemoteException {
-		transactionManager.addResource(xid,  carManager);
+		transactionManager.updateTime(xid);
+		transactionManager.addResource(xid, carManager);
 		try {
 			System.out.println("Middleware connected to Cars server to delete cars");
 			return carManager.deleteCars(xid, location);
@@ -132,7 +136,8 @@ public class RMIMiddleware extends ResourceManager {
 
 	@Override
 	public boolean deleteRooms(int xid, String location) throws RemoteException {
-		transactionManager.addResource(xid,  roomManager);
+		transactionManager.updateTime(xid);
+		transactionManager.addResource(xid, roomManager);
 		try {
 			System.out.println("Middleware connected to Rooms server to delete rooms");
 			return roomManager.deleteRooms(xid, location);
@@ -144,7 +149,8 @@ public class RMIMiddleware extends ResourceManager {
 
 	@Override
 	public int queryFlight(int xid, int flightNum) throws RemoteException {
-		transactionManager.addResource(xid,  flightManager);
+		transactionManager.updateTime(xid);
+		transactionManager.addResource(xid, flightManager);
 		try {
 			System.out.println("Middleware connected to Flights server to query flights.");
 			return flightManager.queryFlight(xid, flightNum);
@@ -156,7 +162,8 @@ public class RMIMiddleware extends ResourceManager {
 
 	@Override
 	public int queryCars(int xid, String location) throws RemoteException {
-		transactionManager.addResource(xid,  carManager);
+		transactionManager.updateTime(xid);
+		transactionManager.addResource(xid, carManager);
 		try {
 			System.out.println("Middleware connected to Cars server to query cars.");
 			return carManager.queryCars(xid, location);
@@ -168,7 +175,8 @@ public class RMIMiddleware extends ResourceManager {
 
 	@Override
 	public int queryRooms(int xid, String location) throws RemoteException {
-		transactionManager.addResource(xid,  roomManager);
+		transactionManager.updateTime(xid);
+		transactionManager.addResource(xid, roomManager);
 		try {
 			System.out.println("Middleware connected to Rooms server to query rooms.");
 			return roomManager.queryRooms(xid, location);
@@ -180,7 +188,8 @@ public class RMIMiddleware extends ResourceManager {
 
 	@Override
 	public int queryFlightPrice(int xid, int flightNum) throws RemoteException {
-		transactionManager.addResource(xid,  flightManager);
+		transactionManager.updateTime(xid);
+		transactionManager.addResource(xid, flightManager);
 		try {
 			System.out.println("Middleware connected to Flights server to query flight price.");
 			return flightManager.queryFlightPrice(xid, flightNum);
@@ -192,7 +201,8 @@ public class RMIMiddleware extends ResourceManager {
 
 	@Override
 	public int queryCarsPrice(int xid, String location) throws RemoteException {
-		transactionManager.addResource(xid,  carManager);
+		transactionManager.updateTime(xid);
+		transactionManager.addResource(xid, carManager);
 		try {
 			System.out.println("Middleware connected to Cars server to query cars price.");
 			return carManager.queryCarsPrice(xid, location);
@@ -204,7 +214,8 @@ public class RMIMiddleware extends ResourceManager {
 
 	@Override
 	public int queryRoomsPrice(int xid, String location) throws RemoteException {
-		transactionManager.addResource(xid,  roomManager);
+		transactionManager.updateTime(xid);
+		transactionManager.addResource(xid, roomManager);
 		try {
 			System.out.println("Middleware connected to Rooms server to query rooms price.");
 			return roomManager.queryRoomsPrice(xid, location);
@@ -218,7 +229,8 @@ public class RMIMiddleware extends ResourceManager {
 	@Override
 	public boolean reserveFlight(int xid, int customerID, int flightNum) throws RemoteException {
 		// Read customer object if it exists (and read lock it)
-		transactionManager.addResource(xid,  flightManager);
+		transactionManager.updateTime(xid);
+		transactionManager.addResource(xid, flightManager);
 		try {
 			Customer customer = (Customer) readData(xid, Customer.getKey(customerID));
 			if (customer == null) {
@@ -244,7 +256,8 @@ public class RMIMiddleware extends ResourceManager {
 
 	@Override
 	public boolean reserveCar(int xid, int customerID, String location) throws RemoteException {
-		transactionManager.addResource(xid,  carManager);
+		transactionManager.updateTime(xid);
+		transactionManager.addResource(xid, carManager);
 		try {
 			// Read customer object if it exists (and read lock it)
 			Customer customer = (Customer) readData(xid, Customer.getKey(customerID));
@@ -270,7 +283,8 @@ public class RMIMiddleware extends ResourceManager {
 	@Override
 	public boolean reserveRoom(int xid, int customerID, String location) throws RemoteException {
 		// Read customer object if it exists (and read lock it)
-		transactionManager.addResource(xid,  roomManager);
+		transactionManager.updateTime(xid);
+		transactionManager.addResource(xid, roomManager);
 		try {
 			Customer customer = (Customer) readData(xid, Customer.getKey(customerID));
 			if (customer == null) {
@@ -296,6 +310,7 @@ public class RMIMiddleware extends ResourceManager {
 	// THE MIDDLEWARE
 	@Override
 	public boolean deleteCustomer(int xid, int customerID) throws RemoteException {
+		transactionManager.updateTime(xid);
 		Trace.info("RM::deleteCustomer(" + xid + ", " + customerID + ") called");
 		Customer customer = (Customer) readData(xid, Customer.getKey(customerID));
 		if (customer == null) {
