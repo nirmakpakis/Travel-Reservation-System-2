@@ -53,7 +53,7 @@ public class ResourceManager implements IResourceManager
 	}
 
 	@Override
-	public void rememberState(int xid){
+	public void rememberState(int xid) throws RemoteException{
 		history.put(xid,(RMHashMap)m_data.clone());
 	}
 
