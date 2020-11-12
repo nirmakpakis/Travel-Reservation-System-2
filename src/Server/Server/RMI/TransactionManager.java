@@ -7,7 +7,7 @@ import java.util.*;
 
 public class TransactionManager {
 	private static int xid_generator = 100;
-	public static int CLIENT_TIMEOUT = 100000;
+	public static long CLIENT_TIMEOUT = 1;
 	
 	// transcaction directory
 	HashMap<Integer, Set<IResourceManager>> activeTransactions = new HashMap<>();

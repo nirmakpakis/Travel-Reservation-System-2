@@ -17,6 +17,7 @@ public class Cleaner implements Runnable {
 				long diff = current - tranTime;
 				if(diff > TransactionManager.CLIENT_TIMEOUT) {
 					try {
+						System.out.println("CLIENT TIMED OUT " + xid);
 						this.transactionManager.abort(xid);
 					}catch(RemoteException remote) {
 						System.out.println("The cleaner failed to clean up friendly transaction");
