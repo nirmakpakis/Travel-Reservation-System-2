@@ -38,9 +38,9 @@ public interface IResourceManager extends Remote
      */
     public int start() throws RemoteException;
     
-    public void rememberState(int xid);
+    public void rememberState(int xid) throws RemoteException; 
     
-    public void rewindTransactions(int xid);
+    public void rewindTransactions(int xid) throws RemoteException;   
     
     /**
      * Add seats to a flight.
