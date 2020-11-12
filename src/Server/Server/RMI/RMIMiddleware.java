@@ -34,13 +34,21 @@ public class RMIMiddleware extends ResourceManager {
 
 	@Override
 	public void abort(int xid) throws RemoteException {
+		Set<IResourceManager> activeResources = this.transactionManager.activeTransactions.get(xid);
+		for(IResourceManager rm: activeResources){
+			rm.abort(xid);
+		}
 		this.transactionManager.abort(xid);
 	}
 
 	// start
 	public int start() {
 		// create a new transaction
-		return this.transactionManager.start();
+		int xid = this.transactionManager.start();
+		this.flightManager.rememberState(xid);
+		this.carManager.rememberState(xid);
+		this.roomManager.rememberState(xid);
+		return xid;
 	}
 
 	// calls addFlight on the flightmanager

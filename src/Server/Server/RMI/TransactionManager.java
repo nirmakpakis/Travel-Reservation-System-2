@@ -8,7 +8,6 @@ import java.util.*;
 
 public class TransactionManager {
 	static int xid_generator = 100;
-	public HashMap<Integer, RMHashMap> history = new HashMap<>();
 
 	// transcaction directory
 	HashMap<Integer, Set<IResourceManager>> activeTransactions = new HashMap<>();

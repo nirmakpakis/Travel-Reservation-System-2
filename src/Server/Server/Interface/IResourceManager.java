@@ -38,6 +38,10 @@ public interface IResourceManager extends Remote
      */
     public int start() throws RemoteException;
     
+    public void rememberState(int xid);
+    
+    public void rewindTransactions(int xid);
+    
     /**
      * Add seats to a flight.
      *
@@ -223,4 +227,6 @@ public interface IResourceManager extends Remote
      */
     public String getName()
         throws RemoteException;
+
+
 }

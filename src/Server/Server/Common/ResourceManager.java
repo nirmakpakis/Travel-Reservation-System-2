@@ -40,16 +40,21 @@ public class ResourceManager implements IResourceManager
 		this.lockManager.UnlockAll(xid);
 	}
 
-	// backupRM
-	public void backupRM(int xid){
-		if(!history.containsKey(xid)) {
-			history.put(xid, (RMHashMap)m_data.clone());
+	@Override
+	public void rewindTransactions(int xid){
+		if(history.containsKey(xid)) {
+			m_data = history.get(xid);
 		}
 	}
 
 	@Override
 	public int start() {
 		return 0;
+	}
+
+	@Override
+	public void rememberState(int xid){
+		history.put(xid,(RMHashMap)m_data.clone());
 	}
 
 	// Reads a data item
