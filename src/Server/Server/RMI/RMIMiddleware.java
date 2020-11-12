@@ -26,19 +26,27 @@ public class RMIMiddleware extends ResourceManager {
 	// Transaction Manager
 	private static TransactionManager transactionManager = new TransactionManager();
 
+	public RMIMiddleware(String p_name)
+	{
+		super(p_name);
+		Cleaner cleaner = new Cleaner(transactionManager);
+		Thread thread = new Thread(cleaner);
+		thread.run();
+	}
+
 	// call commit to all servers
 	@Override
 	public void commit(int xid) throws RemoteException {
-		this.transactionManager.commit(xid);
+		transactionManager.commit(xid);
 	}
 
 	@Override
 	public void abort(int xid) throws RemoteException {
-		Set<IResourceManager> activeResources = this.transactionManager.activeTransactions.get(xid);
+		Set<IResourceManager> activeResources = transactionManager.activeTransactions.get(xid);
 		for(IResourceManager rm: activeResources){
 			rm.rewindTransactions(xid);
 		}
-		this.transactionManager.abort(xid);
+		transactionManager.abort(xid);
 	}
 
 	// start
@@ -46,9 +54,9 @@ public class RMIMiddleware extends ResourceManager {
 		// create a new transaction
 		try {
 			int xid = transactionManager.start();
-			this.flightManager.rememberState(xid);
-			this.carManager.rememberState(xid);
-			this.roomManager.rememberState(xid);
+			flightManager.rememberState(xid);
+			carManager.rememberState(xid);
+			roomManager.rememberState(xid);
 			return xid;
 		}catch(RemoteException e) {
 			System.err.println(e.getMessage());
@@ -464,9 +472,5 @@ public class RMIMiddleware extends ResourceManager {
 		if (System.getSecurityManager() == null) {
 			System.setSecurityManager(new SecurityManager());
 		}
-	}
-
-	public RMIMiddleware(String name) {
-		super(name);
 	}
 }

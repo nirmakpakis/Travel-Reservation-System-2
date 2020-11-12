@@ -69,6 +69,7 @@ public class RMIResourceManager extends ResourceManager {
 		}
 	}
 
+
 	public RMIResourceManager(String name) {
 		super(name);
 	}
@@ -96,4 +97,6 @@ public class RMIResourceManager extends ResourceManager {
 			return true;
 		}
 	}
+
+
 }
