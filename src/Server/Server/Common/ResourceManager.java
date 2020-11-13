@@ -10,7 +10,6 @@ import Server.LockManager.*;
 
 import java.util.*;
 import java.rmi.RemoteException;
-import java.io.*;
 
 public class ResourceManager implements IResourceManager {
 	public String m_name = "";
@@ -22,21 +21,20 @@ public class ResourceManager implements IResourceManager {
 		m_name = p_name;
 	}
 
-	public boolean shutdown() {
+	public boolean shutdown() throws RemoteException {
 		new Thread() {
 			@Override
 			public void run() {
-				System.out.print("Shutting down...");
+				System.out.print("The server is shutting down!");
 				try {
-					sleep(5000);
+					sleep(2000);
 				} catch (InterruptedException e) {
-					// I don't care
 				}
-				System.out.println("done");
 				System.exit(0);
 			}
 
 		}.start();
+		System.out.print("Shut down!");
 		return true;
 	}
 
