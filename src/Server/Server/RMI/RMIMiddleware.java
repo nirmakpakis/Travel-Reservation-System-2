@@ -35,8 +35,9 @@ public class RMIMiddleware extends ResourceManager {
 
 	// call commit to all servers
 	@Override
-	public void commit(int xid) throws RemoteException {
-		transactionManager.commit(xid);
+	public String commit(int xid) throws RemoteException {
+		String result = transactionManager.commit(xid);
+		return result;
 	}
 
 	@Override
