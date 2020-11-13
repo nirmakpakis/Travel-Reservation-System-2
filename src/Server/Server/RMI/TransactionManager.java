@@ -4,11 +4,10 @@ import Server.Interface.*;
 import java.rmi.RemoteException;
 import java.util.*;
 
-
 public class TransactionManager {
 	private static int xid_generator = 100;
 	public static long CLIENT_TIMEOUT = 30000;
-	
+
 	// transcaction directory
 	HashMap<Integer, Set<IResourceManager>> activeTransactions = new HashMap<>();
 	// transaction timestamp
@@ -37,20 +36,21 @@ public class TransactionManager {
 		activeTransactions.get(xid).add(resource);
 	}
 
-	public void commit(int xid) throws RemoteException {
-		if(!activeTransactions.containsKey(xid)) {
-			System.out.println("The transaction is already timedout!");
-			return;
+	public String commit(int xid) throws RemoteException {
+		if (!activeTransactions.containsKey(xid)) {
+			System.out.println("The transaction is already timedout! It is aborted!");
+			return "The transaction is already timedout!";
 		}
 		for (IResourceManager resource : activeTransactions.get(xid)) {
 			resource.commit(xid);
 		}
 		activeTransactions.remove(xid);
 		activeTransactionTime.remove(xid);
+		return "The transaction is commited!!!";
 	}
 
 	public void abort(int xid) throws RemoteException {
-		if(!activeTransactions.containsKey(xid)) {
+		if (!activeTransactions.containsKey(xid)) {
 			System.out.println("The transaction is already timedout!");
 			return;
 		}
