@@ -22,6 +22,7 @@ public class ResourceManager implements IResourceManager {
 		m_name = p_name;
 	}
 
+	@Override
 	public boolean shutdown() throws RemoteException {
 		new Thread() {
 			@Override
