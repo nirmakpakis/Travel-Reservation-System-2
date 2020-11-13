@@ -364,6 +364,10 @@ public class RMIMiddleware extends ResourceManager {
 	@Override
 	public boolean bundle(int xid, int customerId, Vector<String> flightNumbers, String location, boolean car,
 			boolean room) throws RemoteException {
+		transactionManager.updateTime(xid);
+		transactionManager.addResource(xid, carManager);
+		transactionManager.addResource(xid, flightManager);
+		transactionManager.addResource(xid, roomManager);
 		try {
 			Customer customer = (Customer) readData(xid, Customer.getKey(customerId));
 			if (customer == null) {

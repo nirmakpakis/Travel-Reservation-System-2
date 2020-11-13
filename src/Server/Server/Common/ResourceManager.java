@@ -22,6 +22,24 @@ public class ResourceManager implements IResourceManager {
 		m_name = p_name;
 	}
 
+	public boolean shutdown() {
+		new Thread() {
+			@Override
+			public void run() {
+				System.out.print("Shutting down...");
+				try {
+					sleep(5000);
+				} catch (InterruptedException e) {
+					// I don't care
+				}
+				System.out.println("done");
+				System.exit(0);
+			}
+
+		}.start();
+		return true;
+	}
+
 	// Commit
 	@Override
 	public String commit(int xid) throws RemoteException {

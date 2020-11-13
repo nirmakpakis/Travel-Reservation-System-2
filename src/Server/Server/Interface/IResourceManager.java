@@ -21,6 +21,7 @@ import java.util.*;
  */
 
 public interface IResourceManager extends Remote {
+
     /**
      * commit
      */
@@ -35,6 +36,8 @@ public interface IResourceManager extends Remote {
      * start
      */
     public int start() throws RemoteException;
+
+    public boolean shutdown() throws RemoteException;
 
     public void rememberState(int xid) throws RemoteException;
 
