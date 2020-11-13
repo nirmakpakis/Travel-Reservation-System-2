@@ -63,6 +63,19 @@ public abstract class Client {
 
 	public void execute(Command cmd, Vector<String> arguments) throws RemoteException, NumberFormatException {
 		switch (cmd) {
+			case Shutdown: {
+				if (arguments.size() == 1) {
+					boolean result = m_resourceManager.shutdown();
+					if (result == true) {
+						System.out.println("All servers are shutdown!");
+					} else {
+						System.out.println("Can't shutdown the servers!");
+					}
+				} else {
+					System.err.println((char) 27 + "[31;1mCommand exception: " + (char) 27
+							+ "[0mImproper use of shutdown command. Location \"help\" or \"help,<CommandName>\"");
+				}
+			}
 			case Help: {
 				if (arguments.size() == 1) {
 					System.out.println(Command.description());

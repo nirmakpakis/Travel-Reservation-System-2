@@ -3,10 +3,8 @@ package Client;
 public enum Command {
 	Help("List all available commands", "[CommandName]"),
 
-	Start("Starts transaction, returns xid", ""),
-	Commit("Commits a transaction", "<xid>"),
-	Abort("Aborts a transaction", "<xid>"),
-
+	Start("Starts transaction, returns xid", ""), Commit("Commits a transaction", "<xid>"),
+	Abort("Aborts a transaction", "<xid>"), Shutdown("Shuts down all servers!", ""),
 
 	AddFlight("Add a new flight number", "<xid>,<FlightNumber>,<NumberOfSeats>,<PricePerSeat>"),
 	AddCars("Add a new car location", "<xid>,<Location>,<NumberOfCar>,<Price>"),
@@ -32,46 +30,40 @@ public enum Command {
 	ReserveCar("Reserve a car for a customer at a location", "<xid>,<CustomerID>,<Location>"),
 	ReserveRoom("Reserve a room for a customer at a location", "<xid>,<CustomerID>,<Location>"),
 
-	Bundle("Book N flight numbers, and optionally a room and/or car at a location", "<xid>,<CustomerID>,<FlightNumber1>...<FlightNumberN>,<Location>,<Car-Y/N>,<Room-Y/N>"),
+	Bundle("Book N flight numbers, and optionally a room and/or car at a location",
+			"<xid>,<CustomerID>,<FlightNumber1>...<FlightNumberN>,<Location>,<Car-Y/N>,<Room-Y/N>"),
 
 	Quit("Exit the client application", "");
 
 	String m_description;
 	String m_args;
 
-	Command(String p_description, String p_args)
-	{
+	Command(String p_description, String p_args) {
 		m_description = p_description;
 		m_args = p_args;
 	}
 
-	public static Command fromString(String string)
-	{
-		for (Command cmd : Command.values())
-		{
-			if (cmd.name().equalsIgnoreCase(string))
-			{
+	public static Command fromString(String string) {
+		for (Command cmd : Command.values()) {
+			if (cmd.name().equalsIgnoreCase(string)) {
 				return cmd;
 			}
 		}
 		throw new IllegalArgumentException("Command " + string + " not found");
 	}
 
-	public static String description()
-	{
+	public static String description() {
 		String ret = "Commands supported by the client:\n";
-		for (Command cmd : Command.values())
-		{	 
+		for (Command cmd : Command.values()) {
 			ret += "\t" + cmd.name() + "\n";
 		}
 		ret += "use help,<CommandName> for more detailed information";
 		return ret;
 	}
 
-	public String toString()
-	{
+	public String toString() {
 		String ret = name() + ": " + m_description + "\n";
 		ret += "Usage: " + name() + "," + m_args;
 		return ret;
 	}
-}             
+}
