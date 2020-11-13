@@ -54,7 +54,6 @@ public class RMIMiddleware extends ResourceManager {
 		Boolean result1 = carManager.shutdown();
 		Boolean result2 = flightManager.shutdown();
 		Boolean result3 = roomManager.shutdown();
-		this.shutdown();
 		return result1 && result2 && result3;
 	}
 

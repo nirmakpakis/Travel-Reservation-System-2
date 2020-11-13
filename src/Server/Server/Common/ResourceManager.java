@@ -10,6 +10,7 @@ import Server.LockManager.*;
 
 import java.util.*;
 import java.rmi.RemoteException;
+import java.io.*;
 
 public class ResourceManager implements IResourceManager {
 	public String m_name = "";
