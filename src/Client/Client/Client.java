@@ -72,9 +72,10 @@ public abstract class Client {
 						System.out.println("Can't shutdown the servers!");
 					}
 				} else {
-					System.err.println(
-							(char) 27 + "[31;1mCommand exception: " + (char) 27 + "[0mImproper use of Start command.");
+					System.err.println((char) 27 + "[31;1mCommand exception: " + (char) 27
+							+ "[0mImproper use of Shutdown command.");
 				}
+				break;
 			}
 			case Help: {
 				if (arguments.size() == 1) {
